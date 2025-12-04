@@ -35,7 +35,7 @@ export function YokaiCard({ yokai, onCapture, isCapturing }: YokaiCardProps) {
         <div className={styles.infoItem}>
           <span className={styles.label}>Status:</span>
           <span className={`${styles.value} ${styles[`status-${yokai.status}`]}`}>
-            {yokai.status === 'active' ? '🔴 Active' : '✅ Captured'}
+            {yokai.status === 'active' ? 'Active' : 'Captured'}
           </span>
         </div>
       </div>
@@ -46,7 +46,7 @@ export function YokaiCard({ yokai, onCapture, isCapturing }: YokaiCardProps) {
           disabled={isCapturing}
           className={styles.captureButton}
         >
-          {isCapturing ? 'Capturing...' : '⚡ Capture'}
+          {isCapturing ? 'Capturing...' : 'Capture'}
         </button>
       )}
     </div>

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { yokaiListSchema } from '@/entities/yokai';
 
-// Mock data for yokai spirits
 const yokaiData = [
   {
     id: '1',
@@ -49,7 +48,6 @@ const yokaiData = [
 
 export async function GET() {
   try {
-    // Validate data with Zod
     const validated = yokaiListSchema.parse(yokaiData);
     
     return NextResponse.json(validated);

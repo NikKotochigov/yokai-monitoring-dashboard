@@ -9,7 +9,6 @@ export default function Monitoring() {
             <header className={styles.header}>
                 <div className={styles.headerContent}>
                     <h1 className={styles.title}>
-                        <span className={styles.icon}>🏮</span>
                         Yokai Monitoring Dashboard
                     </h1>
                     <p className={styles.subtitle}>

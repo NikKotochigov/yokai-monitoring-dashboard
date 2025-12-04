@@ -19,7 +19,7 @@ export function YokaiList() {
   const [notification, setNotification] = useState<NotificationState | null>(null);
   const [capturingId, setCapturingId] = useState<string | null>(null);
 
-  // Subscribe to SSE updates
+  // Subscribe to SSE
   useYokaiStream();
 
   const handleCapture = (yokaiId: string, yokaiName: string) => {
@@ -27,14 +27,14 @@ export function YokaiList() {
     captureYokai(yokaiId, {
       onSuccess: () => {
         setNotification({
-          message: `✅ Successfully captured ${yokaiName}!`,
+          message: `Successfully captured ${yokaiName}!`,
           type: 'success',
         });
         setCapturingId(null);
       },
       onError: (error) => {
         setNotification({
-          message: `❌ ${error.message}`,
+          message: `${error.message}`,
           type: 'error',
         });
         setCapturingId(null);
@@ -57,7 +57,7 @@ export function YokaiList() {
     return (
       <div className={styles.container}>
         <div className={styles.error}>
-          <p>⚠️ Error loading yokai data</p>
+          <p>Error loading yokai data</p>
           <small>{error.message}</small>
         </div>
       </div>

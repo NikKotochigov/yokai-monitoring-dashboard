@@ -1,50 +1,44 @@
-import { SSE_UPDATE_INTERVAL } from '@/shared/config/constants';
+import {SSE_UPDATE_INTERVAL} from '@/shared/config/constants';
 
-export async function GET() {
-  const stream = new TransformStream();
-  const writer = stream.writable.getWriter();
-  const encoder = new TextEncoder();
+export async function GET(request: Request) {
+    const stream = new TransformStream();
+    const writer = stream.writable.getWriter();
+    const encoder = new TextEncoder();
 
-  // Send SSE events every 5 seconds
-  const interval = setInterval(async () => {
-    try {
-      // Random yokai ID (1-6)
-      const randomYokaiId = String(Math.floor(Math.random() * 6) + 1);
-      
-      // Random threat level
-      const levels = ['low', 'medium', 'high', 'critical'] as const;
-      const newLevel = levels[Math.floor(Math.random() * levels.length)];
+    const interval = setInterval(async () => {
+        try {
+            const randomYokaiId = String(Math.floor(Math.random() * 6) + 1);
 
-      const data = JSON.stringify({
-        yokaiId: randomYokaiId,
-        threatLevel: newLevel,
-        timestamp: new Date().toISOString(),
-      });
+            const levels = ['low', 'medium', 'high', 'critical'] as const;
+            const newLevel = levels[Math.floor(Math.random() * levels.length)];
 
-      await writer.write(encoder.encode(`data: ${data}\n\n`));
-    } catch (error) {
-      console.error('Error writing SSE event:', error);
-      clearInterval(interval);
-    }
-  }, SSE_UPDATE_INTERVAL);
+            const data = JSON.stringify({
+                yokaiId: randomYokaiId,
+                threatLevel: newLevel,
+                timestamp: new Date().toISOString(),
+            });
 
-  // Clean up on connection close
-  const cleanup = () => {
-    clearInterval(interval);
-    writer.close();
-  };
+            await writer.write(encoder.encode(`data: ${data}\n\n`));
+        } catch (error) {
+            console.error('Error writing SSE event:', error);
+            clearInterval(interval);
+            writer.close().catch(() => {
+            });
+        }
+    }, SSE_UPDATE_INTERVAL);
 
-  // Handle client disconnect
-  setTimeout(() => {
-    // This is a fallback cleanup, actual cleanup happens when client closes
-  }, 0);
+    request.signal.addEventListener('abort', () => {
+        clearInterval(interval);
+        writer.close().catch(() => {
+        });
+    });
 
-  return new Response(stream.readable, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache, no-transform',
-      'Connection': 'keep-alive',
-      'X-Accel-Buffering': 'no',
-    },
-  });
+    return new Response(stream.readable, {
+        headers: {
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache, no-transform',
+            'Connection': 'keep-alive',
+            'X-Accel-Buffering': 'no',
+        },
+    });
 }

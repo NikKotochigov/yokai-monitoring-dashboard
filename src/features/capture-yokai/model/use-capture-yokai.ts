@@ -11,13 +11,10 @@ export function useCaptureYokai() {
 
     // Optimistic update
     onMutate: async (yokaiId: string) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.YOKAI_LIST });
 
-      // Snapshot the previous value
       const previousYokaiList = queryClient.getQueryData<Yokai[]>(QUERY_KEYS.YOKAI_LIST);
 
-      // Optimistically update to the new value
       queryClient.setQueryData<Yokai[]>(QUERY_KEYS.YOKAI_LIST, (old) => {
         if (!old) return old;
         return old.map((yokai) =>
@@ -25,18 +22,15 @@ export function useCaptureYokai() {
         );
       });
 
-      // Return context with the previous value
       return { previousYokaiList };
     },
 
-    // If mutation fails, use the context returned from onMutate to roll back
     onError: (err, variables, context) => {
       if (context?.previousYokaiList) {
         queryClient.setQueryData(QUERY_KEYS.YOKAI_LIST, context.previousYokaiList);
       }
     },
 
-    // Always refetch after error or success
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.YOKAI_LIST });
     },

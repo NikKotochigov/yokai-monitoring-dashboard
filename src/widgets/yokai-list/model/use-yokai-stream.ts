@@ -17,7 +17,6 @@ export function useYokaiStream() {
         const rawData = JSON.parse(event.data);
         const data = sseEventSchema.parse(rawData);
 
-        // Update the yokai list with new threat level
         queryClient.setQueryData<Yokai[]>(QUERY_KEYS.YOKAI_LIST, (old) => {
           if (!old) return old;
           return old.map((yokai) =>

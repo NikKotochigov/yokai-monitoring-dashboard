@@ -12,10 +12,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    // 30% probability of failure
     if (Math.random() < CAPTURE_ERROR_RATE) {
       return NextResponse.json(
         { error: 'Capture failed - yokai escaped!' },
@@ -23,7 +21,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Success response
     return NextResponse.json({
       success: true,
       yokaiId,
