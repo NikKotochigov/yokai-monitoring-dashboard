@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { QueryProvider } from '@/app/providers/query-provider';
-import '@/app/styles/globals.scss';
+import { QueryProvider } from '@/providers/query-provider';
+import './styles/globals.scss';
 
 export const metadata: Metadata = {
   title: 'Yokai Monitoring Dashboard',
